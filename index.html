@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Act 0: Prologue</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      background: black;
+      color: white;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      margin: 0;
+      padding: 40px 10px;
+      scroll-behavior: smooth;
+    }
+
+    .dialogue-wrapper {
+      display: flex;
+      align-items: flex-start;
+      background: black;
+      color: white;
+      border: 3px solid white;
+      padding: 16px;
+      max-width: 600px;
+      margin: 60px auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+      box-shadow: 0 0 0 3px black;
+    }
+
+    .dialogue-avatar {
+      width: 64px;
+      height: 64px;
+      image-rendering: pixelated;
+      margin-right: 16px;
+    }
+
+    .dialogue-text {
+      flex: 1;
+    }
+
+    .name-aria {
+      color: #87cefa;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .button-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .next-button {
+      display: inline-block;
+      padding: 5px 10px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      color: white;
+      background: black;
+      cursor: pointer;
+      text-decoration: none;
+      border: 2px solid white;
+      transition: 0.2s;
+    }
+
+    .next-button:hover {
+      background: white;
+      color: black;
+    }
+
+    section {
+      scroll-margin-top: 60px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Section 1 -->
+<section id="section01">
+  <div class="dialogue-wrapper">
+    <img class="dialogue-avatar" src="https://i.imgur.com/9OC7GRw.gif" alt="Aria Avatar">
+    <div class="dialogue-text">
+      <span class="name-aria">Aria</span>
+      <span id="typed1"></span>
+    </div>
+  </div>
+  <div class="button-container" id="button1" style="display:none;">
+    <a href="#section02" class="next-button">Okay.</a>
+  </div>
+</section>
+
+<!-- Section 2 -->
+<section id="section02">
+  <div class="dialogue-wrapper">
+    <img class="dialogue-avatar" src="https://i.imgur.com/9OC7GRw.gif" alt="Aria Avatar">
+    <div class="dialogue-text">
+      <span class="name-aria">Aria</span>
+      <span id="typed2"></span>
+    </div>
+  </div>
+  <div class="button-container" id="button2" style="display:none;">
+    <a href="#section03" class="next-button">It hasn't…</a>
+  </div>
+</section>
+
+<!-- Section 3 -->
+<section id="section03">
+  <div class="dialogue-wrapper">
+    <img class="dialogue-avatar" src="https://i.imgur.com/9OC7GRw.gif" alt="Aria Avatar">
+    <div class="dialogue-text">
+      <span class="name-aria">Aria</span>
+      <span id="typed3"></span>
+    </div>
+  </div>
+  <div class="button-container" id="button3" style="display:none;">
+    <a href="#start-game" class="next-button">Press Start</a>
+  </div>
+</section>
+
+<script>
+  const allLines = [
+    [
+      "* Hey there, my love.",
+      "* Before we go anywhere…",
+      "* Can I tell you something?"
+    ],
+    [
+      "* Today isn't just another day...",
+      "* It's YOUR day. Your birthday.",
+      "* But I know… it hasn’t all been sunshine, has it?"
+    ],
+    [
+      "* You've been strong through so much.",
+      "* Hospital visits, work stress, the distance between us...",
+      "* And loving me? That’s not easy either.",
+      "* But if you’re willing…",
+      "* Let’s go on a little journey together.",
+      "* One that leads back to me.",
+      "* Ready to begin?"
+    ]
+  ];
+
+  function startTyping(index, elementId, buttonId, callback) {
+    const lines = allLines[index];
+    const container = document.getElementById(elementId);
+    const button = document.getElementById(buttonId);
+    let i = 0;
+
+    function typeLine(line, done) {
+      const p = document.createElement("p");
+      container.appendChild(p);
+      let j = 0;
+
+      function typeChar() {
+        if (j < line.length) {
+          p.innerHTML += line.charAt(j);
+          j++;
+          setTimeout(typeChar, 60);
+        } else {
+          done();
+        }
+      }
+
+      typeChar();
+    }
+
+    function nextLine() {
+      if (i < lines.length) {
+        typeLine(lines[i], () => {
+          i++;
+          setTimeout(nextLine, 400);
+        });
+      } else {
+        button.style.display = "block";
+        if (callback) callback();
+      }
+    }
+
+    nextLine();
+  }
+
+  startTyping(0, "typed1", "button1", () => {
+    document.querySelector('.next-button[href="#section02"]').addEventListener('click', () => {
+      startTyping(1, "typed2", "button2", () => {
+        document.querySelector('.next-button[href="#section03"]').addEventListener('click', () => {
+          startTyping(2, "typed3", "button3");
+        });
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
